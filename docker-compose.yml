@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: justsolve_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: justsolve_db
+      MYSQL_USER: justsolve_user
+      MYSQL_PASSWORD: justsolve_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_ROOT_HOST: "%"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db/data:/var/lib/mysql
+    networks:
+      - justsolve-network
+
+  backend:
+    build:
+      context: ./backend
+    container_name: justsolve_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8081"
+    working_dir: /var/www
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: justsolve_db
+      DB_USERNAME: justsolve_user
+      DB_PASSWORD: justsolve_pass
+      APP_KEY: base64:2WqIlZgOAcLA5mDHsenHzCT62CsvGrLde1p/PKSmWY0=
+      APP_ENV: local
+      APP_DEBUG: true
+    depends_on:
+      - db
+    volumes:
+      - ./backend/src:/var/www
+    networks:
+      - justsolve-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: justsolve_frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/src:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    networks:
+      - justsolve-network
+
+networks:
+  justsolve-network:
+    driver: bridge
