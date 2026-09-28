@@ -6,16 +6,18 @@
     <tr>
       <th>ID</th>
       <th>Debtor</th>
+      <th>Agent</th>
       <th>Amount (€)</th>
       <th>Days Overdue</th>
-      <th>Last Actionn</th>
+      <th>Last Action</th>
       <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let debt of debts">
       <td>{{ debt.id }}</td>
-      <td>{{ debt.user.name || '—' }}</td>
+      <td>{{ debt.debtor_name || '—' }}</td>
+      <td>{{ debt.user?.name || '—' }}</td>
       <td>{{ debt.amount | currency:'EUR' }}</td>
       <td>{{ debt.days_overdue }}</td>
       <td>{{ debt.last_action || '—' }}</td>

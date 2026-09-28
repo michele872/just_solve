@@ -12,6 +12,7 @@ class Debt extends Model
 
     protected $fillable = [
         'external_id',
+        'debtor_name',
         'amount',
         'days_overdue',
         'status',

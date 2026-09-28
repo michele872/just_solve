@@ -18,7 +18,8 @@ class DebtSeeder extends Seeder
         for ($i = 1; $i <= 5; $i++) {
             Debt::create([
                 'external_id' => 'DEBT-' . $i,
-                'amount' => rand(100, 1000),
+                'debtor_name' => fake()->name(),
+                'amount' => rand(100, 2500),
                 'days_overdue' => rand(5, 120),
                 'status' => 'OPEN',
                 'user_id' => $user->id,
